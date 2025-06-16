@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Matrix - Muhammad Reza Yahya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        .dimension-input {
+            padding: 10px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            width: 80px;
+            font-size: 16px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .dimension-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .operations {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .matrices-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .matrix-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .matrix-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .matrix-grid {
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .matrix-row {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .matrix-input {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .matrix-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: #f0f8ff;
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .result-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .result-matrix {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .result-matrix-grid {
+            display: inline-block;
+        }
+
+        .result-matrix-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            justify-content: center;
+        }
+
+        .result-cell {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2c3e50;
+            padding: 8px 12px;
+            border-radius: 6px;
+            min-width: 60px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .info-panel {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .info-panel h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .info-panel ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .info-panel li {
+            margin: 5px 0;
+        }
+
+        .info-panel li::before {
+            content: "✓ ";
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .matrices-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧮 Kalkulator Matrix</h1>
+            <p>Operasi Matrix yang Mudah dan Cepat</p>
+            <p style="font-size: 1.2em; margin-top: 10px; font-weight: 600;">Muhammad Reza Yahya - 411241030</p>
+        </div>
+
+        <div class="main-content">
+            <div class="info-panel">
+                <h4>🚀 Fitur Unggulan:</h4>
+                <ul>
+                    <li>Penjumlahan dan Pengurangan Matrix</li>
+                    <li>Perkalian Matrix</li>
+                    <li>Transpose Matrix</li>
+                    <li>Determinan Matrix</li>
+                    <li>Invers Matrix</li>
+                </ul>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label>Baris Matrix A:</label>
+                    <input type="number" id="rowsA" class="dimension-input" value="2" min="1" max="5">
+                </div>
+                <div class="control-group">
+                    <label>Kolom Matrix A:</label>
+                    <input type="number" id="colsA" class="dimension-input" value="2" min="1" max="5">
+                </div>
+                <div class="control-group">
+                    <label>Baris Matrix B:</label>
+                    <input type="number" id="rowsB" class="dimension-input" value="2" min="1" max="5">
+                </div>
+                <div class="control-group">
+                    <label>Kolom Matrix B:</label>
+                    <input type="number" id="colsB" class="dimension-input" value="2" min="1" max="5">
+                </div>
+                <button class="btn btn-primary" onclick="generateMatrices()">🎯 Buat Matrix</button>
+                <button class="btn btn-danger" onclick="clearAll()">🗑️ Hapus Semua</button>
+            </div>
+
+            <div class="operations">
+                <button class="btn btn-secondary" onclick="addMatrices()">➕ A + B</button>
+                <button class="btn btn-secondary" onclick="subtractMatrices()">➖ A - B</button>
+                <button class="btn btn-secondary" onclick="multiplyMatrices()">✖️ A × B</button>
+                <button class="btn btn-secondary" onclick="transposeA()">🔄 Transpose A</button>
+                <button class="btn btn-secondary" onclick="transposeB()">🔄 Transpose B</button>
+                <button class="btn btn-secondary" onclick="determinantA()">🎲 Det A</button>
+                <button class="btn btn-secondary" onclick="determinantB()">🎲 Det B</button>
+                <button class="btn btn-secondary" onclick="inverseA()">🔄 A⁻¹</button>
+                <button class="btn btn-secondary" onclick="inverseB()">🔄 B⁻¹</button>
+            </div>
+
+            <div class="matrices-container">
+                <div class="matrix-section">
+                    <h3>📊 Matrix A</h3>
+                    <div id="matrixA"></div>
+                </div>
+                <div class="matrix-section">
+                    <h3>📈 Matrix B</h3>
+                    <div id="matrixB"></div>
+                </div>
+            </div>
+
+            <div id="result"></div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Kalkulator Matrix | Muhammad Reza Yahya - 411241030</p>
+            <p style="margin-top: 8px; font-size: 0.9em; opacity: 0.8;">Dibuat dengan ❤️ untuk memudahkan pembelajaran matematika</p>
+        </div>
+    </div>
+
+    <script>
+        function generateMatrices() {
+            const rowsA = parseInt(document.getElementById('rowsA').value);
+            const colsA = parseInt(document.getElementById('colsA').value);
+            const rowsB = parseInt(document.getElementById('rowsB').value);
+            const colsB = parseInt(document.getElementById('colsB').value);
+
+            document.getElementById('matrixA').innerHTML = createMatrixHTML('A', rowsA, colsA);
+            document.getElementById('matrixB').innerHTML = createMatrixHTML('B', rowsB, colsB);
+            clearResult();
+        }
+
+        function createMatrixHTML(name, rows, cols) {
+            let html = '<div class="matrix-grid">';
+            for (let i = 0; i < rows; i++) {
+                html += '<div class="matrix-row">';
+                for (let j = 0; j < cols; j++) {
+                    html += `<input type="number" class="matrix-input" id="${name}_${i}_${j}" value="0" step="any">`;
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function getMatrix(name) {
+            const inputs = document.querySelectorAll(`input[id^="${name}_"]`);
+            if (inputs.length === 0) return null;
+
+            const matrix = [];
+            let currentRow = [];
+            let lastRow = 0;
+
+            inputs.forEach(input => {
+                const [, row, col] = input.id.split('_').map(Number);
+                if (row !== lastRow) {
+                    if (currentRow.length > 0) matrix.push(currentRow);
+                    currentRow = [];
+                    lastRow = row;
+                }
+                currentRow.push(parseFloat(input.value) || 0);
+            });
+            
+            if (currentRow.length > 0) matrix.push(currentRow);
+            return matrix;
+        }
+
+        function displayResult(title, matrix, scalar = null) {
+            const resultDiv = document.getElementById('result');
+            let html = `<div class="result-section"><h3>${title}</h3>`;
+            
+            if (scalar !== null) {
+                html += `<div class="result-matrix"><div style="text-align: center; font-size: 1.5em; font-weight: bold;">${scalar}</div></div>`;
+            } else if (matrix) {
+                html += '<div class="result-matrix"><div class="result-matrix-grid">';
+                matrix.forEach(row => {
+                    html += '<div class="result-matrix-row">';
+                    row.forEach(cell => {
+                        html += `<div class="result-cell">${Number(cell.toFixed(4))}</div>`;
+                    });
+                    html += '</div>';
+                });
+                html += '</div></div>';
+            }
+            html += '</div>';
+            resultDiv.innerHTML = html;
+        }
+
+        function displayError(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<div class="error">❌ Error: ${message}</div>`;
+        }
+
+        function clearResult() {
+            document.getElementById('result').innerHTML = '';
+        }
+
+        function clearAll() {
+            document.getElementById('matrixA').innerHTML = '';
+            document.getElementById('matrixB').innerHTML = '';
+            clearResult();
+        }
+
+        function addMatrices() {
+            const matrixA = getMatrix('A');
+            const matrixB = getMatrix('B');
+            
+            if (!matrixA || !matrixB) {
+                displayError('Silakan buat matrix terlebih dahulu!');
+                return;
+            }
+            
+            if (matrixA.length !== matrixB.length || matrixA[0].length !== matrixB[0].length) {
+                displayError('Dimensi matrix A dan B harus sama untuk penjumlahan!');
+                return;
+            }
+            
+            const result = matrixA.map((row, i) => 
+                row.map((cell, j) => cell + matrixB[i][j])
+            );
+            
+            displayResult('🎉 Hasil Penjumlahan (A + B)', result);
+        }
+
+        function subtractMatrices() {
+            const matrixA = getMatrix('A');
+            const matrixB = getMatrix('B');
+            
+            if (!matrixA || !matrixB) {
+                displayError('Silakan buat matrix terlebih dahulu!');
+                return;
+            }
+            
+            if (matrixA.length !== matrixB.length || matrixA[0].length !== matrixB[0].length) {
+                displayError('Dimensi matrix A dan B harus sama untuk pengurangan!');
+                return;
+            }
+            
+            const result = matrixA.map((row, i) => 
+                row.map((cell, j) => cell - matrixB[i][j])
+            );
+            
+            displayResult('🎉 Hasil Pengurangan (A - B)', result);
+        }
+
+        function multiplyMatrices() {
+            const matrixA = getMatrix('A');
+            const matrixB = getMatrix('B');
+            
+            if (!matrixA || !matrixB) {
+                displayError('Silakan buat matrix terlebih dahulu!');
+                return;
+            }
+            
+            if (matrixA[0].length !== matrixB.length) {
+                displayError('Jumlah kolom matrix A harus sama dengan jumlah baris matrix B!');
+                return;
+            }
+            
+            const result = [];
+            for (let i = 0; i < matrixA.length; i++) {
+                result[i] = [];
+                for (let j = 0; j < matrixB[0].length; j++) {
+                    let sum = 0;
+                    for (let k = 0; k < matrixB.length; k++) {
+                        sum += matrixA[i][k] * matrixB[k][j];
+                    }
+                    result[i][j] = sum;
+                }
+            }
+            
+            displayResult('🎉 Hasil Perkalian (A × B)', result);
+        }
+
+        function transpose(matrix) {
+            return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
+        }
+
+        function transposeA() {
+            const matrixA = getMatrix('A');
+            if (!matrixA) {
+                displayError('Silakan buat matrix A terlebih dahulu!');
+                return;
+            }
+            
+            const result = transpose(matrixA);
+            displayResult('🔄 Transpose Matrix A', result);
+        }
+
+        function transposeB() {
+            const matrixB = getMatrix('B');
+            if (!matrixB) {
+                displayError('Silakan buat matrix B terlebih dahulu!');
+                return;
+            }
+            
+            const result = transpose(matrixB);
+            displayResult('🔄 Transpose Matrix B', result);
+        }
+
+        function determinant(matrix) {
+            const n = matrix.length;
+            if (n !== matrix[0].length) {
+                throw new Error('Matrix harus berbentuk persegi untuk menghitung determinan!');
+            }
+            
+            if (n === 1) return matrix[0][0];
+            if (n === 2) return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+            
+            let det = 0;
+            for (let i = 0; i < n; i++) {
+                const subMatrix = matrix.slice(1).map(row => 
+                    row.filter((_, colIndex) => colIndex !== i)
+                );
+                det += matrix[0][i] * Math.pow(-1, i) * determinant(subMatrix);
+            }
+            return det;
+        }
+
+        function determinantA() {
+            const matrixA = getMatrix('A');
+            if (!matrixA) {
+                displayError('Silakan buat matrix A terlebih dahulu!');
+                return;
+            }
+            
+            try {
+                const det = determinant(matrixA);
+                displayResult('🎲 Determinan Matrix A', null, det);
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+
+        function determinantB() {
+            const matrixB = getMatrix('B');
+            if (!matrixB) {
+                displayError('Silakan buat matrix B terlebih dahulu!');
+                return;
+            }
+            
+            try {
+                const det = determinant(matrixB);
+                displayResult('🎲 Determinan Matrix B', null, det);
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+
+        function inverse(matrix) {
+            const n = matrix.length;
+            if (n !== matrix[0].length) {
+                throw new Error('Matrix harus berbentuk persegi untuk menghitung invers!');
+            }
+            
+            const det = determinant(matrix);
+            if (Math.abs(det) < 1e-10) {
+                throw new Error('Matrix singular (determinan = 0), tidak memiliki invers!');
+            }
+            
+            if (n === 1) return [[1 / matrix[0][0]]];
+            if (n === 2) {
+                return [
+                    [matrix[1][1] / det, -matrix[0][1] / det],
+                    [-matrix[1][0] / det, matrix[0][0] / det]
+                ];
+            }
+            
+            // Untuk matrix 3x3 ke atas, menggunakan metode adjugate
+            const adjugate = [];
+            for (let i = 0; i < n; i++) {
+                adjugate[i] = [];
+                for (let j = 0; j < n; j++) {
+                    const subMatrix = matrix
+                        .filter((_, rowIndex) => rowIndex !== i)
+                        .map(row => row.filter((_, colIndex) => colIndex !== j));
+                    const cofactor = Math.pow(-1, i + j) * determinant(subMatrix);
+                    adjugate[j][i] = cofactor / det; // Transpose sekaligus
+                }
+            }
+            
+            return adjugate;
+        }
+
+        function inverseA() {
+            const matrixA = getMatrix('A');
+            if (!matrixA) {
+                displayError('Silakan buat matrix A terlebih dahulu!');
+                return;
+            }
+            
+            try {
+                const inv = inverse(matrixA);
+                displayResult('🔄 Invers Matrix A (A⁻¹)', inv);
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+
+        function inverseB() {
+            const matrixB = getMatrix('B');
+            if (!matrixB) {
+                displayError('Silakan buat matrix B terlebih dahulu!');
+                return;
+            }
+            
+            try {
+                const inv = inverse(matrixB);
+                displayResult('🔄 Invers Matrix B (B⁻¹)', inv);
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+
+        // Generate matrix default ketika halaman dimuat
+        window.onload = function() {
+            generateMatrices();
+        };
+    </script>
+</body>
+</html>
